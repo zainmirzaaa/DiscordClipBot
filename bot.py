@@ -1,6 +1,15 @@
 import discord
 from discord.ext import commands
 import requests
+from llama_agent import highlight_clips
+
+@bot.command()
+async def highlight(ctx, *, text: str):
+    """Run transcript text through LLaMA stub for highlights."""
+    picks = highlight_clips(text)
+    msg = "\n".join([f"- {p}" for p in picks])
+    await ctx.send(f"Highlights:\n{msg}")
+
 
 @bot.command()
 async def transcribe(ctx, url: str):
