@@ -26,3 +26,22 @@ func main() {
 	log.Println("clip service running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
+
+type ClipMeta struct {
+	ID       string `json:"id"`
+	Link     string `json:"link"`
+	Uploaded string `json:"uploaded"`
+}
+
+func enrichClips(clips []string) []ClipMeta {
+	res := []ClipMeta{}
+	for i, c := range clips {
+		res = append(res, ClipMeta{
+			ID: fmt.Sprintf("%d", i+1),
+			Link: c,
+			Uploaded: "2025-08-27",
+		})
+	}
+	return res
+}
