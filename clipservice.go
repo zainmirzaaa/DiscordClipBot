@@ -45,3 +45,18 @@ func enrichClips(clips []string) []ClipMeta {
 	}
 	return res
 }
+
+
+var mongoClient *mongo.Client
+
+func init() {
+	mongoClient = connectMongo("mongodb://localhost:27017")
+}
+
+func saveClip(id, link string) {
+	coll := mongoClient.Database("discord_ai").Collection("clips")
+	_, err := coll.InsertOne(context.TODO(), Clip{ID: id, Link: link})
+	if err != nil {
+		log.Println("save error:", err)
+	}
+}
