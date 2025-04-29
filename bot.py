@@ -37,3 +37,13 @@ async def ping(ctx):
 
 if __name__ == "__main__":
     bot.run("YOUR_DISCORD_BOT_TOKEN")
+
+@bot.command()
+async def clips(ctx):
+    res = requests.get("http://localhost:8080/clips")
+    if res.ok:
+        data = res.json()
+        links = "\n".join([c["link"] for c in data])
+        await ctx.send(f"Available Clips:\n{links}")
+    else:
+        await ctx.send("Failed to fetch clips.")
