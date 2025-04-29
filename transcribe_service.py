@@ -1,6 +1,15 @@
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
+from llama_agent import highlight_clips
+
+@app.route("/highlight", methods=["POST"])
+def highlight_route():
+    data = request.get_json(force=True)
+    transcript = data.get("transcript", "")
+    picks = highlight_clips(transcript)
+    return jsonify({"highlights": picks})
+
 
 @app.errorhandler(Exception)
 def handle_error(e):
