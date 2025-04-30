@@ -60,3 +60,16 @@ func saveClip(id, link string) {
 		log.Println("save error:", err)
 	}
 }
+
+
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Write([]byte(`{"ok": true}`))
+}
+
+func main() {
+	http.HandleFunc("/clips", clipsHandler)
+	http.HandleFunc("/health", healthHandler)
+	log.Println("clip service running on :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
