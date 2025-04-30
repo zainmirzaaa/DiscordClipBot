@@ -47,3 +47,17 @@ async def clips(ctx):
         await ctx.send(f"Available Clips:\n{links}")
     else:
         await ctx.send("Failed to fetch clips.")
+
+@bot.command()
+async def auto_highlight(ctx, url: str):
+    """Fetch transcript + highlights from backend."""
+    res = requests.post("http://localhost:5001/transcribe",
+                        json={"audio_url": url})
+    if not res.ok:
+        return await ctx.send("Transcription failed.")
+
+    transcript = res.json()["transcript"]
+    res2 = requests.post("http://localhost:5001/highlight",
+                         json={"transcript": transcript})
+    picks = res2.json().get("highlights", [])
+    await ctx.send("Highlights:\n" + "\n".join([f"- {h}" for h in picks]))
