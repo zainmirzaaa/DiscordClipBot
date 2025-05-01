@@ -2,6 +2,17 @@ from flask import Flask, request, jsonify
 
 app = Flask(__name__)
 from llama_agent import highlight_clips
+from pymongo import MongoClient
+client = MongoClient("mongodb://localhost:27017")
+db = client["discord_ai"]
+
+@app.route("/save", methods=["POST"])
+def save_transcript():
+    data = request.get_json(force=True)
+    db.transcripts.insert_one({"url": data["audio_url"],
+                               "text": data["transcript"]})
+    return jsonify({"ok": True})
+
 
 @app.route("/highlight", methods=["POST"])
 def highlight_route():
