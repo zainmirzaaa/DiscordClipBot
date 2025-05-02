@@ -37,3 +37,9 @@ def transcribe():
 
 if __name__ == "__main__":
     app.run(port=5001, debug=True)
+
+@app.route("/all", methods=["GET"])
+def all_transcripts():
+    docs = list(db.transcripts.find().limit(10))
+    out = [{"url": d["url"], "text": d["text"]} for d in docs]
+    return jsonify({"items": out})
