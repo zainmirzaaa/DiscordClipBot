@@ -61,3 +61,13 @@ async def auto_highlight(ctx, url: str):
                          json={"transcript": transcript})
     picks = res2.json().get("highlights", [])
     await ctx.send("Highlights:\n" + "\n".join([f"- {h}" for h in picks]))
+
+@bot.command()
+async def transcripts(ctx):
+    res = requests.get("http://localhost:5001/all")
+    if res.ok:
+        docs = res.json().get("items", [])
+        msg = "\n".join([f"{i+1}. {d['url']}" for i, d in enumerate(docs)])
+        await ctx.send("Saved transcripts:\n" + msg)
+    else:
+        await ctx.send("Could not fetch transcripts.")
