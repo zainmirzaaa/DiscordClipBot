@@ -73,3 +73,21 @@ func main() {
 	log.Println("clip service running on :8080")
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
+
+
+func insertClip(id, link string) {
+	coll := mongoClient.Database("discord_ai").Collection("clips")
+	_, err := coll.InsertOne(context.TODO(), Clip{ID: id, Link: link})
+	if err != nil {
+		log.Println("insert error:", err)
+	}
+}
+
+func addClipHandler(w http.ResponseWriter, r *http.Request) {
+	var c Clip
+	if err := json.NewDecoder(r.Body).Decode(&c); err != nil {
+		http.Error(w, "bad request", 400); return
+	}
+	insertClip(c.ID, c.Link)
+	w.Write([]byte(`{"ok": true}`))
+}
