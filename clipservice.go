@@ -91,3 +91,12 @@ func addClipHandler(w http.ResponseWriter, r *http.Request) {
 	insertClip(c.ID, c.Link)
 	w.Write([]byte(`{"ok": true}`))
 }
+
+
+func main() {
+	http.HandleFunc("/clips", clipsHandler)
+	http.HandleFunc("/clip", addClipHandler) // new route
+	http.HandleFunc("/health", healthHandler)
+	log.Println("clip service running on :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}
