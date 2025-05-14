@@ -71,3 +71,13 @@ async def transcripts(ctx):
         await ctx.send("Saved transcripts:\n" + msg)
     else:
         await ctx.send("Could not fetch transcripts.")
+
+
+@bot.command()
+async def addclip(ctx, link: str):
+    payload = {"id": "botclip", "link": link}
+    res = requests.post("http://localhost:8080/clip", json=payload)
+    if res.ok:
+        await ctx.send("Clip saved ✅")
+    else:
+        await ctx.send("Failed to save clip ❌")
