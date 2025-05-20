@@ -43,3 +43,10 @@ def all_transcripts():
     docs = list(db.transcripts.find().limit(10))
     out = [{"url": d["url"], "text": d["text"]} for d in docs]
     return jsonify({"items": out})
+
+@app.route("/search", methods=["GET"])
+def search_transcripts():
+    q = request.args.get("q", "")
+    docs = db.transcripts.find({"text": {"$regex": q, "$options": "i"}}).limit(5)
+    out = [{"url": d["url"], "text": d["text"]} for d in docs]
+    return jsonify({"results": out})
