@@ -81,3 +81,14 @@ async def addclip(ctx, link: str):
         await ctx.send("Clip saved ✅")
     else:
         await ctx.send("Failed to save clip ❌")
+
+
+@bot.command()
+async def searchtext(ctx, *, keyword: str):
+    res = requests.get(f"http://localhost:5001/search?q={keyword}")
+    if res.ok:
+        hits = res.json().get("results", [])
+        msg = "\n".join([f"{i+1}. {h['url']}" for i, h in enumerate(hits)])
+        await ctx.send("Matches:\n" + msg if hits else "No matches found.")
+    else:
+        await ctx.send("Search failed.")
