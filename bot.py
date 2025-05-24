@@ -92,3 +92,11 @@ async def searchtext(ctx, *, keyword: str):
         await ctx.send("Matches:\n" + msg if hits else "No matches found.")
     else:
         await ctx.send("Search failed.")
+
+@bot.command()
+async def deletetext(ctx, url: str):
+    res = requests.post("http://localhost:5001/delete", json={"url": url})
+    if res.ok and res.json().get("deleted", 0) > 0:
+        await ctx.send("Transcript deleted ✅")
+    else:
+        await ctx.send("No transcript found ❌")
