@@ -50,3 +50,12 @@ def search_transcripts():
     docs = db.transcripts.find({"text": {"$regex": q, "$options": "i"}}).limit(5)
     out = [{"url": d["url"], "text": d["text"]} for d in docs]
     return jsonify({"results": out})
+
+@app.route("/delete", methods=["POST"])
+def delete_transcript():
+    data = request.get_json(force=True)
+    url = data.get("url")
+    if not url:
+        return jsonify({"error": "missing url"}), 400
+    result = db.transcripts.delete_one({"url": url})
+    return jsonify({"deleted": result.deleted_count})
