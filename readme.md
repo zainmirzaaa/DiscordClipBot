@@ -1,1 +1,2 @@
 AI agent to title videos and save them azure for discord users
+typeeee
